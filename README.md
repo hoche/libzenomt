@@ -30,7 +30,7 @@ Documentation
 **Analysis:**
 - [Code Evaluation](docs/code-evaluation.md) - Comprehensive code review
 
-This code is extracted, forked, and reorganized from the author's public
+This code is extracted, forked, and reorganized from the public
 Github repository at
 [`https://github.com/zenomt/rtmfp-cpp`](https://github.com/zenomt/rtmfp-cpp).
 
