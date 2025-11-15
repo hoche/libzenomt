@@ -158,17 +158,17 @@ sequenceDiagram
 ```mermaid
 gantt
     title RunLoop Cycle Timeline
-    dateFormat X
+    dateFormat x
     axisFormat %L ms
     
     section Cycle
-    Cache Time           :0, 0.001
-    Calculate Sleep      :0.001, 0.002
-    Wait for Events      :0.002, 5.002
-    Process FDs          :5.002, 5.010
-    Process doLater      :5.010, 5.015
-    Fire Timers          :5.015, 5.020
-    onEveryCycle         :5.020, 5.025
+    Cache Time           :0, 1
+    Calculate Sleep      :1, 2
+    Wait for Events      :2, 5002
+    Process FDs          :5002, 5010
+    Process doLater      :5010, 5015
+    Fire Timers          :5015, 5020
+    onEveryCycle         :5020, 5025
 ```
 
 ---
@@ -307,21 +307,21 @@ sequenceDiagram
     participant RL as RunLoop
     participant DT as doLater Queue
 
-    App->>RL: doLater([...] { task1(); })
-    RL->>DT: push(task1)
+    App->>RL: doLater(task1)
+    RL->>DT: push task1
     
-    App->>RL: doLater([...] { task2(); })
-    RL->>DT: push(task2)
+    App->>RL: doLater(task2)
+    RL->>DT: push task2
     
     App->>RL: run()
     
     loop RunLoop cycle
         RL->>RL: processDoLaters()
-        RL->>DT: pop(task1)
-        RL->>App: Execute task1()
-        RL->>DT: pop(task2)
-        RL->>App: Execute task2()
-        RL->>DT: Check if empty
+        RL->>DT: pop task1
+        RL->>App: execute task1
+        RL->>DT: pop task2
+        RL->>App: execute task2
+        RL->>DT: check if empty
     end
 ```
 

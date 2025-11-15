@@ -18,15 +18,16 @@ sequenceDiagram
   participant PSA as PosixStreamPlatformAdapter
   participant H as SimpleHttpStream
   participant WS as SimpleWebSocket
-  App->>PSA: setSocketFd(fd); attachToRunLoop(&RL)
+
+  App->>PSA: setSocketFd(fd) and attach to RunLoop
   note right of PSA: registers readable/writable with RL
-  PSA-->>H: onreceivebytes(bytes)
+  PSA-->>H: onReceiveBytes
   H-->>H: parse header block
   H-->>App: onHttpHeadersReceived
-  H-->>WS: upgrade to websocket if requested
-  WS-->>App: onOpen/onTextMessage/onBinaryMessage
-  App->>WS: sendTextMessage()/sendBinaryMessage()
-  WS-->>PSA: writeFrame(...)
+  H-->>WS: upgrade to WebSocket if requested
+  WS-->>App: onOpen / onTextMessage / onBinaryMessage
+  App->>WS: sendTextMessage / sendBinaryMessage
+  WS-->>PSA: writeFrame
   PSA-->>socket: send
 ```
 

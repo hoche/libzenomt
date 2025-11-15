@@ -31,12 +31,11 @@ RunLoop Cycle
 
 ```mermaid
 flowchart TD
-  A[cacheTime()] --> B[howLongToNextFire(now)]
-  B --> C{sleep until
-          min(nextTimer, fd readiness)}
+  A["cacheTime()"] --> B["howLongToNextFire(now)"]
+  B --> C["sleep until min(nextTimer, fd readiness)"]
   C -->|fd ready| D[dispatch fd Action]
-  C -->|timer due| E[TimerList.fireDueTimers(now)]
-  D --> F[processDoLaters()]
+  C -->|timer due| E["TimerList.fireDueTimers(now)"]
+  D --> F["processDoLaters()"]
   E --> F
   F --> G[onEveryCycle]
   G --> H{stopping?}
@@ -109,5 +108,3 @@ Best Practices
 - Use `minSleep` > 0 to reduce CPU when timers are very frequent but soft latency is acceptable.
 - Use `doLater` to break up large tasks over multiple cycles.
 - Unregister fd actions before closing their file descriptors.
-
-

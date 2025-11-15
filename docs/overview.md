@@ -18,32 +18,28 @@ High‑Level Architecture
 
 ```mermaid
 flowchart LR
-  subgraph Core Runtime
-    RL[RunLoop
-      - registerDescriptor(fd, cond)
-      - schedule()/doLater()
-      - onEveryCycle]
-    TL[TimerList
-      - schedule()
-      - fireDueTimers()]
+
+  subgraph Core_Runtime
+    RL[RunLoop]
+    TL[TimerList]
     T[Timer]
     P[Performer]
   end
 
   subgraph Platform
-    SRL[SelectRunLoop]
-    ERL[EPollRunLoop]
-    PSA[PosixStreamPlatformAdapter]
+    SRL[SelectRL]
+    ERL[EPollRL]
+    PSA[PosixAdapter]
   end
 
-  subgraph Streams/Protocols
-    H[SimpleHttpStream]
-    WS[SimpleWebSocket]
-    WSO[SimpleWebSocket_OpenSSL]
+  subgraph Streams_Protocols
+    H[HttpStream]
+    WS[WebSocket]
+    WSO[WS_OpenSSL]
   end
 
-  RL <-- uses --- TL
-  TL <-- owns --- T
+  RL --> TL
+  TL --> T
   P  --> RL
   SRL --> RL
   ERL --> RL
