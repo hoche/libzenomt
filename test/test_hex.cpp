@@ -67,7 +67,7 @@ TEST(HexTest, RoundTrip) {
 	std::string encoded = Hex::encode(original, sizeof(original));
 	
 	std::vector<uint8_t> decoded;
-	EXPECT_TRUE(Hex::decode(encoded, decoded));
+	EXPECT_TRUE(Hex::decode(encoded.c_str(), decoded));
 	
 	EXPECT_EQ(decoded.size(), sizeof(original));
 	for(size_t i = 0; i < sizeof(original); i++) {

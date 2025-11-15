@@ -4,7 +4,7 @@
 using namespace com::zenomt;
 
 TEST(URIParseTest, BasicParse) {
-	auto u = URIParse::parse("rtmfp://foo:1935/bar");
+	URIParse u("rtmfp://foo:1935/bar");
 	
 	EXPECT_EQ(u.scheme, "rtmfp");
 	EXPECT_EQ(u.host, "foo");
@@ -14,7 +14,7 @@ TEST(URIParseTest, BasicParse) {
 }
 
 TEST(URIParseTest, IPv6) {
-	auto u = URIParse::parse("rtmfp://[2001:db8::1]:1234");
+	URIParse u("rtmfp://[2001:db8::1]:1234");
 	
 	EXPECT_EQ(u.host, "2001:db8::1");
 	EXPECT_EQ(u.port, "1234");
@@ -22,22 +22,22 @@ TEST(URIParseTest, IPv6) {
 }
 
 TEST(URIParseTest, DefaultPort) {
-	auto u = URIParse::parse("rtmfp://foo");
+	URIParse u("rtmfp://foo");
 	EXPECT_EQ(u.effectivePort, "1935");
 }
 
 TEST(URIParseTest, HTTPSDefaultPort) {
-	auto u = URIParse::parse("https://example.com");
+	URIParse u("https://example.com");
 	EXPECT_EQ(u.effectivePort, "443");
 }
 
 TEST(URIParseTest, HTTPDefaultPort) {
-	auto u = URIParse::parse("http://example.com");
+	URIParse u("http://example.com");
 	EXPECT_EQ(u.effectivePort, "80");
 }
 
 TEST(URIParseTest, QueryAndFragment) {
-	auto u = URIParse::parse("rtmfp://foo/bar?query=baz#fragment");
+	URIParse u("rtmfp://foo/bar?query=baz#fragment");
 	
 	EXPECT_EQ(u.path, "/bar");
 	EXPECT_EQ(u.query, "query=baz");
@@ -45,7 +45,7 @@ TEST(URIParseTest, QueryAndFragment) {
 }
 
 TEST(URIParseTest, UserInfo) {
-	auto u = URIParse::parse("rtmfp://user:pass@foo:1936");
+	URIParse u("rtmfp://user:pass@foo:1936");
 	
 	EXPECT_EQ(u.userinfo, "user:pass");
 	EXPECT_EQ(u.user, "user");

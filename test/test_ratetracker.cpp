@@ -7,7 +7,7 @@ using namespace com::zenomt;
 TEST(RateTrackerTest, BasicRate) {
 	RateTracker tracker(1.0); // 1 second window
 	
-	tracker.addBytes(100, 0.0);
+	tracker.update(100, 0.0);
 	
 	double rate = tracker.getRate(1.0);
 	EXPECT_NEAR(rate, 100.0, 0.1);
@@ -23,7 +23,7 @@ TEST(RateTrackerTest, ZeroRate) {
 TEST(RateTrackerTest, WindowExpiry) {
 	RateTracker tracker(1.0); // 1 second window
 	
-	tracker.addBytes(100, 0.0);
+	tracker.update(100, 0.0);
 	
 	// After window expires, rate should be zero
 	double rate = tracker.getRate(2.0);
@@ -33,8 +33,8 @@ TEST(RateTrackerTest, WindowExpiry) {
 TEST(RateTrackerTest, MultipleAdditions) {
 	RateTracker tracker(1.0);
 	
-	tracker.addBytes(50, 0.0);
-	tracker.addBytes(50, 0.5);
+	tracker.update(50, 0.0);
+	tracker.update(50, 0.5);
 	
 	double rate = tracker.getRate(1.0);
 	EXPECT_NEAR(rate, 100.0, 0.1);
@@ -43,7 +43,7 @@ TEST(RateTrackerTest, MultipleAdditions) {
 TEST(RateTrackerTest, PartialWindow) {
 	RateTracker tracker(1.0);
 	
-	tracker.addBytes(100, 0.0);
+	tracker.update(100, 0.0);
 	
 	// Halfway through window
 	double rate = tracker.getRate(0.5);
@@ -53,9 +53,9 @@ TEST(RateTrackerTest, PartialWindow) {
 TEST(RateTrackerTest, SlidingWindow) {
 	RateTracker tracker(1.0);
 	
-	tracker.addBytes(100, 0.0);
-	tracker.addBytes(100, 1.0);
-	tracker.addBytes(100, 2.0);
+	tracker.update(100, 0.0);
+	tracker.update(100, 1.0);
+	tracker.update(100, 2.0);
 	
 	// At time 2.0, only the last addition should be in window
 	double rate = tracker.getRate(2.0);

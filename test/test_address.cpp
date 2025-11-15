@@ -3,6 +3,7 @@
 #include "zenomt/Address.hpp"
 
 using namespace com::zenomt;
+using namespace com::zenomt::rtmfp;
 
 TEST(AddressTest, IPv4Basic) {
 	Address addr;
@@ -13,8 +14,7 @@ TEST(AddressTest, IPv4Basic) {
 	EXPECT_EQ(addr.getFamily(), AF_INET);
 	
 	uint8_t result[4];
-	size_t len = sizeof(result);
-	EXPECT_TRUE(addr.getIPAddress(result, len));
+	size_t len = addr.getIPAddress(result);
 	EXPECT_EQ(len, 4);
 	EXPECT_EQ(memcmp(result, ipv4, 4), 0);
 }
@@ -32,7 +32,7 @@ TEST(AddressTest, Port) {
 	Address addr;
 	uint16_t port = 8080;
 	
-	EXPECT_TRUE(addr.setPort(port));
+	addr.setPort(port);
 	EXPECT_EQ(addr.getPort(), port);
 }
 
@@ -46,8 +46,7 @@ TEST(AddressTest, SerializeIPv4) {
 	addr.setPort(port);
 	
 	uint8_t buffer[16];
-	size_t len = sizeof(buffer);
-	EXPECT_TRUE(addr.serialize(buffer, len));
+	size_t len = addr.encode(buffer);
 	EXPECT_GT(len, 0);
 }
 
@@ -61,8 +60,7 @@ TEST(AddressTest, SerializeIPv6) {
 	addr.setPort(port);
 	
 	uint8_t buffer[32];
-	size_t len = sizeof(buffer);
-	EXPECT_TRUE(addr.serialize(buffer, len));
+	size_t len = addr.encode(buffer);
 	EXPECT_GT(len, 0);
 }
 
@@ -94,6 +92,6 @@ TEST(AddressTest, Inequality) {
 	addr2.setIPAddress(ipv4_2, sizeof(ipv4_2));
 	addr2.setPort(8080);
 	
-	EXPECT_NE(addr1, addr2);
+	EXPECT_FALSE(addr1 == addr2);
 }
 
