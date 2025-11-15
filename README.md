@@ -1,6 +1,6 @@
-zenomt Foundation Library
+zenomt Networking Library
 =========================
-Lightweight C++11 utilities for event‑driven (especially networking) programs.
+Lightweight C++11 utilities for event‑driven (especially networking) programs. Extracted from https://github.com/zenomt/rtmfp-cpp.
 
 Features
 --------
