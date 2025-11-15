@@ -32,6 +32,8 @@ TEST(AddressTest, Port) {
 	Address addr;
 	uint16_t port = 8080;
 	
+	// setPort() only works if family is set
+	addr.setFamily(AF_INET);
 	addr.setPort(port);
 	EXPECT_EQ(addr.getPort(), port);
 }

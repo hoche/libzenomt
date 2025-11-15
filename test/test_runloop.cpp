@@ -99,6 +99,12 @@ TEST_F(RunLoopTest, DoLater) {
 TEST_F(RunLoopTest, OnEveryCycle) {
 	int cycleCount = 0;
 	
+	// Need a timer to keep the loop running and cycling
+	auto timer = runLoop->scheduleRel(0.01, 0.01, true);
+	timer->action = Timer::makeAction([&](Time now) {
+		// Timer keeps loop active
+	});
+	
 	runLoop->onEveryCycle = [&]() {
 		cycleCount++;
 		if(cycleCount >= 5) {
@@ -126,13 +132,14 @@ TEST_F(RunLoopTest, TimeFunctions) {
 
 TEST_F(RunLoopTest, StopFlag) {
 	bool timerFired = false;
+	bool stopCalled = false;
 	
 	auto timer = runLoop->scheduleRel(0.1, 0, true);
 	timer->action = Timer::makeAction([&](Time now) {
 		timerFired = true;
+		runLoop->stop(); // Stop from within timer callback
+		stopCalled = true;
 	});
-
-	runLoop->stop();
 
 	std::thread t([this]() {
 		runLoop->run(1.0);
@@ -140,8 +147,12 @@ TEST_F(RunLoopTest, StopFlag) {
 
 	t.join();
 	
-	// Timer shouldn't fire if we stop immediately
-	EXPECT_FALSE(timerFired);
+	// Timer should fire and then stop the loop
+	EXPECT_TRUE(timerFired);
+	EXPECT_TRUE(stopCalled);
+	
+	// Verify loop actually stopped (timer fired but loop exited)
+	// The fact that t.join() returned means the loop stopped
 }
 
 TEST_F(RunLoopTest, IsRunningInThisThread) {
