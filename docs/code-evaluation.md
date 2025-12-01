@@ -96,14 +96,6 @@ m_runningInThread = std::this_thread::get_id();
 
 ### 4. Potential Bugs
 
-**Issue in `SelectRunLoop.cpp:54-55`:**
-```cpp
-FD_SET(it->first, fdset);
-maxFd = it->first; // map is in order so this is safe
-```
-- **Problem**: Assumes map iteration order gives maximum FD, which is not guaranteed
-- **Recommendation**: Use `std::max(maxFd, it->first)`
-
 **Issue in `SimpleWebSocket.cpp:600`:**
 ```cpp
 if(m_fragmentedMessageOpcode > 0)
@@ -134,16 +126,21 @@ target_compile_options(zenomt PRIVATE -Os)
 - **Problem**: Hardcoded optimization flag may conflict with user settings
 - **Recommendation**: Make it configurable or remove (let users set it)
 
+### 7. Logging
+
+**Issue: No logging functionality**
+- There is no facility for logging errors, warnings, or internal status other than a few messages to stdout.
+- **Recommendation**: Add configurable logging system that can log to stdout, a file, or syslog.
+
 ---
 
 ## Recommendations
 
 ### High Priority
-1. Fix `maxFd` calculation in `SelectRunLoop.cpp`
-2. Replace `calloc`/`free` with C++ memory management
-3. Make `m_runningInThread` atomic in `SelectRunLoop`
-4. Add error logging/callbacks for system call failures
-5. Validate WebSocket opcodes
+1. Replace `calloc`/`free` with C++ memory management
+2. Make `m_runningInThread` atomic in `SelectRunLoop`
+3. Add error logging/callbacks for system call failures
+4. Validate WebSocket opcodes
 
 ### Medium Priority
 1. Standardize error handling approach
@@ -156,6 +153,7 @@ target_compile_options(zenomt PRIVATE -Os)
 2. Add more unit tests
 3. Consider using `std::chrono` types instead of `long double` for time
 4. Make CMake optimization flags configurable
+5. Add log handling
 
 ---
 
